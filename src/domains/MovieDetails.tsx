@@ -89,17 +89,24 @@ const TagText = styled.Text`
   color: #fff;
 `;
 
+const SectionTitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: ${round(20)}px;
+`;
+
 const SectionTitle = styled.Text`
   font-family: "BeVietnamPro-Medium";
   font-size: ${round(20)}px;
   color: ${Colors.textPrimary};
-  margin-top: ${round(20)}px;
+  margin-left: ${round(8)}px;
 `;
 
 const SectionText = styled.Text`
   font-family: "BeVietnamPro-Regular";
   font-size: ${round(16)}px;
-  color: ${Colors.textPrimary};
+  line-height: ${round(24)}px;
+  color: ${Colors.lightBorder};
   margin-top: ${round(20)}px;
 `;
 
@@ -138,7 +145,7 @@ interface MovieDetailsResponse {
 }
 
 const MovieDetails: React.FC = () => {
-  const { Back } = Icons;
+  const { Back, Star, Information, Award, Movie } = Icons;
 
   const [movie, setMovie] = useState<MovieDetailsResponse>();
   const [isFetching, setIsFetching] = useState(true);
@@ -207,8 +214,47 @@ const MovieDetails: React.FC = () => {
               );
             })}
         </Tags>
-        <SectionTitle>Synopsis</SectionTitle>
+        <SectionTitleContainer>
+          <Movie />
+          <SectionTitle>Synopsis</SectionTitle>
+        </SectionTitleContainer>
         <SectionText>{movie?.Plot}</SectionText>
+        <SectionTitleContainer>
+          <Award />
+          <SectionTitle>Awards</SectionTitle>
+        </SectionTitleContainer>
+        <SectionText>{movie?.Awards}</SectionText>
+        <SectionTitleContainer>
+          <Star fill={Colors.textPrimary} />
+          <SectionTitle>Ratings</SectionTitle>
+        </SectionTitleContainer>
+        {movie?.Ratings.map(item => (
+          <SectionText key={item.Source}>
+            {item.Source} - {item.Value}
+          </SectionText>
+        ))}
+        <SectionTitleContainer>
+          <Information />
+          <SectionTitle>Other info</SectionTitle>
+        </SectionTitleContainer>
+        <SectionText>
+          Rated - {movie?.Rated}
+          {"\n"}
+          Box office - {movie?.BoxOffice}
+          {"\n"}
+          Runtime - {movie?.Runtime}
+          {"\n"}
+          Dvd release date - {movie?.DVD}
+          {"\n"}
+          Writers - {movie?.Writer}
+          {"\n"}
+          Country - {movie?.Country}
+          {"\n"}
+          Languages - {movie?.Language}
+          {"\n"}
+          Total IMDb votes - {movie?.imdbVotes}
+          {"\n"}
+        </SectionText>
       </>
     );
   };

@@ -1,6 +1,6 @@
 import React from "react";
 import Svg, { G, Path } from "react-native-svg";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { Colors } from "../tokens";
 
 interface StarProps {
   width?: number;
