@@ -1,5 +1,5 @@
 import axios from "axios";
-import {X_RAPID_API_KEY} from "@env";
+import { X_RAPID_API_KEY } from "@env";
 
 const api = axios.create({
   baseURL: "https://movie-database-imdb-alternative.p.rapidapi.com/",

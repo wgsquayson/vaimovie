@@ -1,11 +1,18 @@
 import * as React from "react";
-import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Home from "./Home";
 import MovieDetails from "./MovieDetails";
 
-const Stack = createNativeStackNavigator();
+export type DomainsStackParamList = {
+  Home: undefined;
+  MovieDetails: {
+    imdbID: string;
+  };
+};
+
+const Stack = createNativeStackNavigator<DomainsStackParamList>();
 
 const Domains = () => {
   return (
@@ -16,7 +23,7 @@ const Domains = () => {
           headerShown: false,
         }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Movie" component={MovieDetails} />
+        <Stack.Screen name="MovieDetails" component={MovieDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

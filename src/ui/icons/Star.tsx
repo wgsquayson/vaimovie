@@ -1,5 +1,6 @@
 import React from "react";
-import Svg, {G, Path} from "react-native-svg";
+import Svg, { G, Path } from "react-native-svg";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 interface StarProps {
   width?: number;
@@ -10,7 +11,7 @@ interface StarProps {
 const Star: React.FC<StarProps> = ({
   width = 18,
   height = 18,
-  fill = "#F6A241",
+  fill = Colors.yellowStar,
 }) => {
   return (
     <Svg height={height} viewBox="0 0 24 24" width={width} fill={fill}>

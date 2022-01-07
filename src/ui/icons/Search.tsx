@@ -1,5 +1,6 @@
 import React from "react";
-import Svg, {Path} from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
+import { Colors } from "../tokens";
 
 interface SearchProps {
   width?: number;
@@ -10,7 +11,7 @@ interface SearchProps {
 const Search: React.FC<SearchProps> = ({
   width = 24,
   height = 24,
-  fill = "#8e95b2",
+  fill = Colors.lightBorder,
 }) => {
   return (
     <Svg height={height} width={width} fill={fill}>
