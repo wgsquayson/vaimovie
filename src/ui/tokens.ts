@@ -8,9 +8,9 @@ import {
 export const round = (value: number): number =>
   PixelRatio.roundToNearestPixel(value);
 
-export const screenPaddingTop =
-  ((isIphoneX() ? getStatusBarHeight() : StatusBar.currentHeight) as number) +
-  round(32);
+export const screenPaddingTop = isIphoneX()
+  ? getStatusBarHeight() + round(32)
+  : StatusBar.currentHeight ?? round(20);
 
 export const bottomSpacer = (isIphoneX() ? getBottomSpace() : 0) + round(20);
 

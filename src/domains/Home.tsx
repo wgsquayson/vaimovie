@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Platform,
   Pressable,
   StatusBar,
   StyleSheet,
@@ -48,13 +49,15 @@ const SearchbarContainer = styled.View`
   border-color: ${Colors.lightBorder};
   border-radius: ${round(100)}px;
   margin: ${round(30)}px 0;
-  padding: ${round(16)}px;
+  padding: ${Platform.OS === "ios" ? round(16) : round(4)}px
+    ${Platform.OS === "ios" ? 0 : round(16)}px;
   flex-direction: row;
+  align-items: center;
 `;
 
 const SearchInput = styled.TextInput`
   flex: 1;
-  margin: 0 ${round(12)}px;
+  margin: 0 ${Platform.OS === "ios" ? round(12) : 0}px;
   font-family: "BeVietnamPro-Regular";
   font-size: ${round(16)}px;
   color: ${Colors.lightBorder};

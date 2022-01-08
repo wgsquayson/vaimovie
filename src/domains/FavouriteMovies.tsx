@@ -20,7 +20,6 @@ const HeaderContainer = styled.View`
 const HeaderTitleContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-top: ${round(20)}px;
 `;
 
 const HeaderTitle = styled.Text`
