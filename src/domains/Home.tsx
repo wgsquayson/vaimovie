@@ -195,7 +195,7 @@ const Home: React.FC = () => {
             </SearchbarContainer>
             {isFetching && <ActivityIndicator size="large" animating />}
             {!isFetching && movies.length > 0 && (
-              <Tip>Tap on a movie to see more details!</Tip>
+              <Tip>Tap on a title to see more details!</Tip>
             )}
           </>
         }

@@ -284,21 +284,21 @@ const MovieDetails: React.FC = () => {
           <SectionTitle>Other info</SectionTitle>
         </SectionTitleContainer>
         <SectionText>
-          Rated - {movie?.Rated}
+          Rated - {movie?.Rated ?? "N/A"}
           {"\n"}
-          Box office - {movie?.BoxOffice}
+          Box office - {movie?.BoxOffice ?? "N/A"}
           {"\n"}
-          Runtime - {movie?.Runtime}
+          Runtime - {movie?.Runtime ?? "N/A"}
           {"\n"}
-          Dvd release date - {movie?.DVD}
+          Dvd release date - {movie?.DVD ?? "N/A"}
           {"\n"}
-          Writers - {movie?.Writer}
+          Writers - {movie?.Writer ?? "N/A"}
           {"\n"}
-          Country - {movie?.Country}
+          Country - {movie?.Country ?? "N/A"}
           {"\n"}
-          Languages - {movie?.Language}
+          Languages - {movie?.Language ?? "N/A"}
           {"\n"}
-          Total IMDb votes - {movie?.imdbVotes}
+          Total IMDb votes - {movie?.imdbVotes ?? "N/A"}
           {"\n"}
         </SectionText>
         <BottomSpacer />

@@ -89,15 +89,15 @@ const FavouriteMovies: React.FC = () => {
             </HeaderTitleContainer>
             {movies.length > 0 && (
               <Detail>
-                Only the best of cinema! Tap on a movie to see more details.
+                Only the best! Tap on a title to see more details.
               </Detail>
             )}
           </HeaderContainer>
         }
         ListEmptyComponent={
           <Detail>
-            No favourites yet. To save a movie as a favourite, tap on the star
-            on the upper right side, when seeing the movie details.
+            No favourites yet. To save a title as a favourite, tap on the star
+            on the upper right corner, when checking the movie details.
           </Detail>
         }
         ListFooterComponent={<BottomSpacer />}
