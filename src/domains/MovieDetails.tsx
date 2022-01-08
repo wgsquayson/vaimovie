@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, ScrollView, StatusBar, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DomainsStackParamList } from "./index";
+import { connect } from "react-redux";
+import { store } from "../store";
 
 import { bottomSpacer, Colors, round, screenPaddingTop } from "../ui/tokens";
 import Icons from "../ui/icons";
 import api from "../service/api";
+import Toast from "react-native-easy-toast";
+import FullscreenLoading from "../ui/components/FullscreenLoading";
+
+import { addFavourite, removeFavourite } from "../store/actions";
+import { Movie } from "./Home";
 
 const Header = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const MoviePoster = styled.Image`
   width: 80%;
-  min-height: ${round(450)}px;
+  height: ${round(450)}px;
   align-self: center;
   border-radius: ${round(12)}px;
   margin-top: ${round(32)}px;
@@ -145,10 +147,13 @@ interface MovieDetailsResponse {
 }
 
 const MovieDetails: React.FC = () => {
-  const { Back, Star, Information, Award, Movie } = Icons;
+  const toastRef = useRef<Toast>();
+
+  const { Back, Star, Information, Award, Movie: MovieIcon } = Icons;
 
   const [movie, setMovie] = useState<MovieDetailsResponse>();
   const [isFetching, setIsFetching] = useState(true);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   const navigation =
     useNavigation<
@@ -156,6 +161,10 @@ const MovieDetails: React.FC = () => {
     >();
 
   const route = useRoute<RouteProp<DomainsStackParamList, "MovieDetails">>();
+
+  const isMovieFavourite = store
+    .getState()
+    .favouriteMovies?.find(item => item.imdbID === route.params.imdbID);
 
   useEffect(() => {
     (async () => {
@@ -170,21 +179,65 @@ const MovieDetails: React.FC = () => {
         if (data.Response === "True") {
           setMovie(data);
         } else {
-          //toastRef.current?.show("No movies found.", 2000);
+          toastRef.current?.show("No movie found.", 2000);
         }
       } catch (error) {
-        //toastRef.current?.show("An error ocurred. Try again later", 2000);
+        toastRef.current?.show("An error ocurred. Try again later", 2000);
       } finally {
         setIsFetching(false);
       }
     })();
+
+    setIsFavourite(isMovieFavourite !== undefined);
   }, []);
 
-  const Content: React.FC = () => {
-    const genres = movie?.Genre?.split(", ") ?? [];
+  const handleFavourite = () => {
+    if (isMovieFavourite) {
+      store.dispatch(removeFavourite(route.params.imdbID));
 
-    return (
-      <>
+      toastRef.current?.show("Movie removed from favourites.", 2000);
+    } else {
+      store.dispatch(
+        addFavourite({
+          imdbID: route.params.imdbID,
+          Poster: movie?.Poster,
+          Title: movie?.Title,
+          Type: movie?.Type,
+          Year: movie?.Year,
+        }),
+      );
+
+      toastRef.current?.show("Movie setted as favourite!", 2000);
+    }
+
+    setIsFavourite(!isMovieFavourite);
+  };
+
+  const genres = movie?.Genre?.split(", ") ?? [];
+
+  if (isFetching) {
+    return <FullscreenLoading />;
+  }
+
+  return (
+    <>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={Colors.backgroundDark}
+      />
+      <ScrollView contentContainerStyle={styles.flatlist} bounces={false}>
+        <Header>
+          <Pressable hitSlop={round(30)} onPress={navigation.goBack}>
+            <Back />
+          </Pressable>
+          <Pressable hitSlop={round(30)} onPress={handleFavourite}>
+            <Star
+              width={24}
+              height={24}
+              fill={isFavourite ? Colors.yellowStar : Colors.lightBorder}
+            />
+          </Pressable>
+        </Header>
         {movie?.Poster === "N/A" ? (
           <MoviePoster
             source={require("../../assets/images/avatar.png")}
@@ -196,7 +249,8 @@ const MovieDetails: React.FC = () => {
         <MovieTitle>{movie?.Title}</MovieTitle>
         <MovieDetailContainer>
           <MovieDetail>
-            {movie?.Year} | {movie?.Director || movie?.Writer}{" "}
+            {movie?.Year} |{" "}
+            {movie?.Director === "N/A" ? movie?.Writer : movie?.Director}{" "}
           </MovieDetail>
           <ImdbRatingContainer>
             <ImdbRatingText>IMDb {movie?.imdbRating}</ImdbRatingText>
@@ -215,7 +269,7 @@ const MovieDetails: React.FC = () => {
             })}
         </Tags>
         <SectionTitleContainer>
-          <Movie />
+          <MovieIcon />
           <SectionTitle>Synopsis</SectionTitle>
         </SectionTitleContainer>
         <SectionText>{movie?.Plot}</SectionText>
@@ -255,34 +309,17 @@ const MovieDetails: React.FC = () => {
           Total IMDb votes - {movie?.imdbVotes}
           {"\n"}
         </SectionText>
-      </>
-    );
-  };
-
-  return (
-    <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={Colors.backgroundDark}
-      />
-      <ScrollView contentContainerStyle={styles.flatlist} bounces={false}>
-        <Header>
-          <Pressable hitSlop={round(30)} onPress={navigation.goBack}>
-            <Back />
-          </Pressable>
-        </Header>
-        {isFetching ? (
-          <ActivityIndicator size="large" animating />
-        ) : (
-          <Content />
-        )}
         <BottomSpacer />
       </ScrollView>
+      <Toast
+        ref={toastRef}
+        style={styles.toast}
+        textStyle={styles.toastText}
+        position="bottom"
+      />
     </>
   );
 };
-
-export default MovieDetails;
 
 const styles = StyleSheet.create({
   flatlist: {
@@ -300,3 +337,12 @@ const styles = StyleSheet.create({
     fontFamily: "BeVietnamPro-Medium",
   },
 });
+
+const mapStateToProps = (state: Movie[]) => {
+  const movie = {
+    data: state,
+  };
+  return { movie };
+};
+
+export default connect(mapStateToProps)(MovieDetails);

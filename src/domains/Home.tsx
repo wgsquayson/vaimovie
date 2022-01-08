@@ -154,7 +154,7 @@ const Home: React.FC = () => {
         </HeaderContainer>
         <SearchbarContainer>
           <SearchInput
-            placeholder="Search for a movie!"
+            placeholder="Search for a movie or series!"
             placeholderTextColor={Colors.lightBorder}
             value={search}
             onChangeText={(value: string) => {

@@ -21,6 +21,7 @@ const Domains = () => {
         initialRouteName="Home"
         screenOptions={{
           headerShown: false,
+          gestureEnabled: true,
         }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="MovieDetails" component={MovieDetails} />
