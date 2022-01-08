@@ -14,13 +14,15 @@ const favouriteMovies = (state: Movie[] = [], action) => {
         },
       ];
     case "REMOVE_FAVOURITE":
-      const movie = state.findIndex(item => item.imdbID === action.imdbID);
+      const movieExists = state.find(item => item.imdbID === action.imdbID);
 
-      const updatedFavouriteMovies = state.splice(1, movie);
+      if (movieExists) {
+        const movieIndex = state.indexOf(movieExists);
 
-      state = updatedFavouriteMovies;
+        state.splice(movieIndex, 1);
+      }
 
-      return state;
+      return [...state];
     default:
       return state;
   }

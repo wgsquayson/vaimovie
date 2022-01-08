@@ -4,12 +4,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Home from "./Home";
 import MovieDetails from "./MovieDetails";
+import FavouriteMovies from "./FavouriteMovies";
 
 export type DomainsStackParamList = {
   Home: undefined;
   MovieDetails: {
     imdbID: string;
   };
+  FavouriteMovies: undefined;
 };
 
 const Stack = createNativeStackNavigator<DomainsStackParamList>();
@@ -25,6 +27,7 @@ const Domains = () => {
         }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="MovieDetails" component={MovieDetails} />
+        <Stack.Screen name="FavouriteMovies" component={FavouriteMovies} />
       </Stack.Navigator>
     </NavigationContainer>
   );

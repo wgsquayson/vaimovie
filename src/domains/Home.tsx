@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   Pressable,
-  ScrollView,
   StatusBar,
   StyleSheet,
 } from "react-native";
@@ -10,6 +10,8 @@ import styled from "styled-components/native";
 import Toast from "react-native-easy-toast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { connect } from "react-redux";
+import { store } from "../store";
 
 import { DomainsStackParamList } from "./index";
 import api from "../service/api";
@@ -31,10 +33,13 @@ const HeaderTitle = styled.Text`
   color: ${Colors.textPrimary};
 `;
 
-const Avatar = styled.Image`
+const FavouritesButton = styled.Pressable`
   width: ${round(50)}px;
   height: ${round(50)}px;
   border-radius: ${round(25)}px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${Colors.lighterBackground};
 `;
 
 const SearchbarContainer = styled.View`
@@ -79,7 +84,7 @@ const Home: React.FC = () => {
     useNavigation<NativeStackNavigationProp<DomainsStackParamList, "Home">>();
 
   const toastRef = useRef<Toast>();
-  const { Search } = Icons;
+  const { Search, Star } = Icons;
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState("");
@@ -147,66 +152,83 @@ const Home: React.FC = () => {
         barStyle="light-content"
         backgroundColor={Colors.backgroundDark}
       />
-      <ScrollView contentContainerStyle={styles.flatlist} bounces={false}>
-        <HeaderContainer>
-          <HeaderTitle>Hi, William!</HeaderTitle>
-          <Avatar source={require("../../assets/images/avatar.png")} />
-        </HeaderContainer>
-        <SearchbarContainer>
-          <SearchInput
-            placeholder="Search for a movie or series!"
-            placeholderTextColor={Colors.lightBorder}
-            value={search}
-            onChangeText={(value: string) => {
-              setSearch(value);
-            }}
-            returnKeyType="search"
-            onBlur={() => {
-              if (search) {
-                fetchMovies();
-              } else {
-                return;
-              }
-            }}
-            autoCorrect={false}
-          />
-          <Pressable onPress={() => fetchMovies()}>
-            <Search />
-          </Pressable>
-        </SearchbarContainer>
-        {isFetching ? (
-          <ActivityIndicator size="large" animating />
-        ) : (
+      <FlatList
+        contentContainerStyle={styles.flatlist}
+        bounces={false}
+        data={movies}
+        keyExtractor={item => item.imdbID}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="none"
+        ListHeaderComponent={
           <>
-            {movies.length > 0 && (
-              <Tip>Tap on a title to see more details!</Tip>
-            )}
-            {movies.map(movie => {
-              const isLastItem = movies[movies.length - 1] === movie;
-
-              return (
-                <MovieItem
-                  key={movie.imdbID}
-                  imdbID={movie.imdbID}
-                  Poster={movie.Poster}
-                  Title={movie.Title}
-                  Year={movie.Year}
-                  hasMoreMovies={hasMoreMovies}
-                  isFetchingMore={isFetchingMore}
-                  onFetchMore={() => fetchMore("spider")}
-                  isLastItem={isLastItem}
-                  onPress={() =>
-                    navigation.navigate("MovieDetails", {
-                      imdbID: movie.imdbID,
-                    })
+            <HeaderContainer>
+              <HeaderTitle>Welcome to VaiMovies!</HeaderTitle>
+              <FavouritesButton
+                onPress={() => navigation.navigate("FavouriteMovies")}>
+                <Star />
+              </FavouritesButton>
+            </HeaderContainer>
+            <SearchbarContainer>
+              <SearchInput
+                placeholder="Search for a movie or series!"
+                placeholderTextColor={Colors.lightBorder}
+                value={search}
+                onChangeText={(value: string) => {
+                  setSearch(value);
+                }}
+                returnKeyType="search"
+                onBlur={() => {
+                  if (search) {
+                    fetchMovies();
+                  } else {
+                    return;
                   }
-                />
-              );
-            })}
+                }}
+                autoCorrect={false}
+              />
+              <Pressable onPress={() => fetchMovies()}>
+                <Search />
+              </Pressable>
+            </SearchbarContainer>
+            {isFetching && <ActivityIndicator size="large" animating />}
+            {!isFetching && movies.length > 0 && (
+              <Tip>Tap on a movie to see more details!</Tip>
+            )}
           </>
-        )}
-        <BottomSpacer />
-      </ScrollView>
+        }
+        ListFooterComponent={<BottomSpacer />}
+        renderItem={({ item }) => {
+          const isFavourite = store
+            .getState()
+            .favouriteMovies?.find(movie => movie.imdbID === item.imdbID);
+
+          const isLastItem = movies[movies.length - 1] === item;
+
+          if (isFetching) {
+            return null;
+          }
+
+          return (
+            <MovieItem
+              key={item.imdbID}
+              imdbID={item.imdbID}
+              Poster={item.Poster}
+              Title={item.Title}
+              Year={item.Year}
+              hasMoreMovies={hasMoreMovies}
+              isFetchingMore={isFetchingMore}
+              onFetchMore={() => fetchMore("spider")}
+              isLastItem={isLastItem}
+              isFavourite={!!isFavourite}
+              onPress={() =>
+                navigation.navigate("MovieDetails", {
+                  imdbID: item.imdbID,
+                })
+              }
+            />
+          );
+        }}
+      />
       <Toast
         ref={toastRef}
         style={styles.toast}
@@ -216,8 +238,6 @@ const Home: React.FC = () => {
     </>
   );
 };
-
-export default Home;
 
 const styles = StyleSheet.create({
   flatlist: {
@@ -235,3 +255,12 @@ const styles = StyleSheet.create({
     fontFamily: "BeVietnamPro-Medium",
   },
 });
+
+const mapStateToProps = (state: Movie[]) => {
+  const movie = {
+    data: state,
+  };
+  return { movie };
+};
+
+export default connect(mapStateToProps)(Home);

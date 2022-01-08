@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, StatusBar, StyleSheet } from "react-native";
 import styled from "styled-components/native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { DomainsStackParamList } from "./index";
 import { connect } from "react-redux";
 import { store } from "../store";
@@ -11,7 +10,7 @@ import { bottomSpacer, Colors, round, screenPaddingTop } from "../ui/tokens";
 import Icons from "../ui/icons";
 import api from "../service/api";
 import Toast from "react-native-easy-toast";
-import FullscreenLoading from "../ui/components/FullscreenLoading";
+import { BackButton, FullscreenLoading } from "../ui/components";
 
 import { addFavourite, removeFavourite } from "../store/actions";
 import { Movie } from "./Home";
@@ -88,7 +87,7 @@ const Tag = styled.View<TagProps>`
 const TagText = styled.Text`
   font-family: "BeVietnamPro-light";
   font-size: ${round(12)}px;
-  color: #fff;
+  color: ${Colors.textPrimary};
 `;
 
 const SectionTitleContainer = styled.View`
@@ -149,16 +148,11 @@ interface MovieDetailsResponse {
 const MovieDetails: React.FC = () => {
   const toastRef = useRef<Toast>();
 
-  const { Back, Star, Information, Award, Movie: MovieIcon } = Icons;
+  const { Star, Information, Award, Movie: MovieIcon } = Icons;
 
   const [movie, setMovie] = useState<MovieDetailsResponse>();
   const [isFetching, setIsFetching] = useState(true);
   const [isFavourite, setIsFavourite] = useState(false);
-
-  const navigation =
-    useNavigation<
-      NativeStackNavigationProp<DomainsStackParamList, "MovieDetails">
-    >();
 
   const route = useRoute<RouteProp<DomainsStackParamList, "MovieDetails">>();
 
@@ -179,7 +173,7 @@ const MovieDetails: React.FC = () => {
         if (data.Response === "True") {
           setMovie(data);
         } else {
-          toastRef.current?.show("No movie found.", 2000);
+          toastRef.current?.show("Nothing found.", 2000);
         }
       } catch (error) {
         toastRef.current?.show("An error ocurred. Try again later", 2000);
@@ -195,7 +189,7 @@ const MovieDetails: React.FC = () => {
     if (isMovieFavourite) {
       store.dispatch(removeFavourite(route.params.imdbID));
 
-      toastRef.current?.show("Movie removed from favourites.", 2000);
+      toastRef.current?.show("Removed from favourites.", 2000);
     } else {
       store.dispatch(
         addFavourite({
@@ -207,7 +201,7 @@ const MovieDetails: React.FC = () => {
         }),
       );
 
-      toastRef.current?.show("Movie setted as favourite!", 2000);
+      toastRef.current?.show("Saved as favourite!", 2000);
     }
 
     setIsFavourite(!isMovieFavourite);
@@ -227,9 +221,7 @@ const MovieDetails: React.FC = () => {
       />
       <ScrollView contentContainerStyle={styles.flatlist} bounces={false}>
         <Header>
-          <Pressable hitSlop={round(30)} onPress={navigation.goBack}>
-            <Back />
-          </Pressable>
+          <BackButton />
           <Pressable hitSlop={round(30)} onPress={handleFavourite}>
             <Star
               width={24}
