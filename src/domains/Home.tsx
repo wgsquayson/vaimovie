@@ -201,7 +201,7 @@ const Home: React.FC = () => {
               <HeaderTitle>
                 {userFirstName
                   ? `Hi ${userFirstName}!`
-                  : "Welcome to VaiMovies!"}
+                  : "Welcome to Vai Movies!"}
               </HeaderTitle>
               <UserProfileButton
                 onPress={() => navigation.navigate("UserProfile")}>
