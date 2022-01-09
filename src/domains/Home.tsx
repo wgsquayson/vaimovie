@@ -11,6 +11,7 @@ import styled from "styled-components/native";
 import Toast from "react-native-easy-toast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Modalize } from "react-native-modalize";
 import { connect } from "react-redux";
 import { store } from "../store";
 
@@ -19,7 +20,7 @@ import api from "../service/api";
 
 import Icons from "../ui/icons";
 import { bottomSpacer, Colors, round, screenPaddingTop } from "../ui/tokens";
-import MovieItem from "../ui/components/MovieItem";
+import { YearInputModal, MovieItem } from "../ui/components";
 
 const HeaderContainer = styled.View`
   width: 100%;
@@ -69,6 +70,10 @@ const SearchInput = styled.TextInput`
   color: ${Colors.lightBorder};
 `;
 
+const CalendarBtn = styled.Pressable`
+  margin-right: ${round(12)}px;
+`;
+
 const Tip = styled.Text`
   font-family: "BeVietnamPro-Medium";
   font-size: ${round(16)}px;
@@ -93,7 +98,9 @@ const Home: React.FC = () => {
     useNavigation<NativeStackNavigationProp<DomainsStackParamList, "Home">>();
 
   const toastRef = useRef<Toast>();
-  const { Search, User } = Icons;
+  const modalRef = useRef<Modalize>();
+
+  const { Search, User, Calendar } = Icons;
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState("");
@@ -102,8 +109,7 @@ const Home: React.FC = () => {
   const [hasMoreMovies, setHasMoreMovies] = useState(true);
   const [page, setPage] = useState(2);
 
-  const [isYearModalVisible, setIsYearModalVisible] = useState(false);
-  const [year, setYear] = useState<String | undefined>(undefined);
+  const [year, setYear] = useState<string | undefined>(undefined);
 
   const fetchMovies = async (movie?: string) => {
     setIsFetching(true);
@@ -113,6 +119,7 @@ const Home: React.FC = () => {
       const { data } = await api.get("", {
         params: {
           s: search ? search.toLowerCase().trim() : movie,
+          y: year ?? undefined,
         },
       });
 
@@ -136,6 +143,7 @@ const Home: React.FC = () => {
         params: {
           s: search ? search.toLowerCase().trim() : movie,
           page: String(page),
+          y: year ?? undefined,
         },
       });
 
@@ -215,6 +223,11 @@ const Home: React.FC = () => {
                 }}
                 autoCorrect={false}
               />
+              <CalendarBtn onPress={() => modalRef.current?.open()}>
+                <Calendar
+                  fill={year ? Colors.yellowStar : Colors.lightBorder}
+                />
+              </CalendarBtn>
               <Pressable onPress={() => fetchMovies()}>
                 <Search />
               </Pressable>
@@ -263,6 +276,17 @@ const Home: React.FC = () => {
         style={styles.toast}
         textStyle={styles.toastText}
         position="bottom"
+      />
+      <YearInputModal
+        ref={modalRef}
+        value={year}
+        onChangeText={value => setYear(value)}
+        onPress={() => {
+          modalRef.current?.close();
+          if (search) {
+            fetchMovies();
+          }
+        }}
       />
     </>
   );

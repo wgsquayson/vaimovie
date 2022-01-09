@@ -7,6 +7,7 @@ import Movie from "./Movie";
 import Calendar from "./Calendar";
 import User from "./User";
 import Google from "./Google";
+import Check from "./Check";
 
 export default {
   Back,
@@ -18,4 +19,5 @@ export default {
   Calendar,
   User,
   Google,
+  Check,
 };
