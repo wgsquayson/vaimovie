@@ -23,7 +23,7 @@ The design for this app was inspired by: https://dribbble.com/shots/15130805-Cin
 ## How to run the project
 
 - Clone this repository using `git clone git@github.com:wgsquayson/vaimovie.git`;
-- On the project folder, run `yarn` or `npm install` to install the dependencies needed to run this project;
+- On the project folder, run `yarn` or `npm install` to install the dependencies needed to run this project, according to your package manager;
 - Run the command `cp .env.example .env` to create the `.env` file, open it and fill `X_RAPID_API_KEY=` with your `x-rapidapi-key` that can be created [here](https://rapidapi.com/rapidapi/api/movie-database-imdb-alternative/);
 - If you're going to run this project on iOS Simulator, be sure to run `cd ios`, `pod install` (or `arch -x86_64 pod install` if using Mac M1 processor) and `cd ..` to install iOS pods;
 - Run `yarn ios`  || `npm run ios` to run the project on iOS Simulator or `yarn android` || `npm run android` to run the project on the android emulator (put `arch -x86_64` before the commands if any problem happens on Mac M1);
