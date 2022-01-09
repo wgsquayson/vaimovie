@@ -4,11 +4,11 @@
 
 This is the Vai Movie app, an app to search for movies or shows, that allows the user to:
 
-- See more details of the searched movie or show;
-- Load more movies/shows on the end of the list, as available;
-- Filter the movies/shows searched per year;
-- Set movie as favourite;
-- Access profile, where he/she can sign in with Google Account, and see the movies/shows setted as favourites.
+- See more details of the searched movie or tv show;
+- Load more movies/tv shows on the end of the list, as available;
+- Filter the movies/tv shows searched by year;
+- Set movie/tv show as favourite;
+- Access a profile screen, where he/she can sign in with Google Account, and see the movies/tv shows setted as favourites.
 
 The app was built with:
 
@@ -16,7 +16,8 @@ The app was built with:
 - Typescript;
 - Styled-Components;
 - Axios;
-- Redux.
+- Redux;
+- and other techs.
 
 The design for this app was inspired by: https://dribbble.com/shots/15130805-Cinema-Booking-App
 
@@ -26,7 +27,7 @@ The design for this app was inspired by: https://dribbble.com/shots/15130805-Cin
 - On the project folder, run `yarn` or `npm install` to install the dependencies needed to run this project, according to your package manager;
 - Run the command `cp .env.example .env` to create the `.env` file, open it and fill `X_RAPID_API_KEY=` with your `x-rapidapi-key` that can be created [here](https://rapidapi.com/rapidapi/api/movie-database-imdb-alternative/), and save the file;
 - If you're going to run this project on iOS Simulator, be sure to run `cd ios`, `pod install` and `cd ..` to install pods;
-- Run `yarn ios`  || `npm run ios` to run the project on iOS Simulator or `yarn android` || `npm run android` to run the project on the android emulator;
+- Run `yarn ios` || `npm run ios` to run the project on iOS Simulator or `yarn android` || `npm run android` to run the project on the android emulator;
 - Run `yarn start` on the same folder to start the metro bundler if not started.
 
 ## Screenshots
@@ -54,8 +55,3 @@ The design for this app was inspired by: https://dribbble.com/shots/15130805-Cin
   <img src="https://user-images.githubusercontent.com/43099794/148667941-8724e8c7-36b8-4585-b9ae-6105be8e928d.png" height="500">
   <img src="https://user-images.githubusercontent.com/43099794/148667988-98005f1d-c1be-43b9-b343-8b65dfd50884.png" height="500">
 </p>
-
-
-
-
-
