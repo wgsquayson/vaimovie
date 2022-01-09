@@ -32,9 +32,10 @@ const HeaderTitle = styled.Text`
   font-family: "BeVietnamPro-Bold";
   font-size: ${round(20)}px;
   color: ${Colors.textPrimary};
+  max-width: 70%;
 `;
 
-const FavouritesButton = styled.Pressable`
+const UserProfileButton = styled.Pressable`
   width: ${round(50)}px;
   height: ${round(50)}px;
   border-radius: ${round(25)}px;
@@ -43,14 +44,19 @@ const FavouritesButton = styled.Pressable`
   background-color: ${Colors.lighterBackground};
 `;
 
+const UserPhoto = styled.Image`
+  width: ${round(50)}px;
+  height: ${round(50)}px;
+  border-radius: ${round(25)}px;
+`;
+
 const SearchbarContainer = styled.View`
   width: 100%;
   border-width: 1px;
   border-color: ${Colors.lightBorder};
   border-radius: ${round(100)}px;
   margin: ${round(30)}px 0;
-  padding: ${Platform.OS === "ios" ? round(16) : round(4)}px
-    ${Platform.OS === "ios" ? 0 : round(16)}px;
+  padding: ${Platform.OS === "ios" ? round(16) : round(4)}px ${round(16)}px;
   flex-direction: row;
   align-items: center;
 `;
@@ -87,7 +93,7 @@ const Home: React.FC = () => {
     useNavigation<NativeStackNavigationProp<DomainsStackParamList, "Home">>();
 
   const toastRef = useRef<Toast>();
-  const { Search, Star } = Icons;
+  const { Search, User } = Icons;
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState("");
@@ -95,6 +101,9 @@ const Home: React.FC = () => {
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [hasMoreMovies, setHasMoreMovies] = useState(true);
   const [page, setPage] = useState(2);
+
+  const [isYearModalVisible, setIsYearModalVisible] = useState(false);
+  const [year, setYear] = useState<String | undefined>(undefined);
 
   const fetchMovies = async (movie?: string) => {
     setIsFetching(true);
@@ -145,6 +154,15 @@ const Home: React.FC = () => {
     }
   };
 
+  const userFirstName = store
+    .getState()
+    .users.find(user => user.signedIn === true)
+    ?.name.split(" ")[0];
+
+  const userPhoto = store
+    .getState()
+    .users.find(user => user.signedIn === true)?.photo;
+
   useEffect(() => {
     fetchMovies("spider");
   }, []);
@@ -165,11 +183,19 @@ const Home: React.FC = () => {
         ListHeaderComponent={
           <>
             <HeaderContainer>
-              <HeaderTitle>Welcome to VaiMovies!</HeaderTitle>
-              <FavouritesButton
-                onPress={() => navigation.navigate("FavouriteMovies")}>
-                <Star />
-              </FavouritesButton>
+              <HeaderTitle>
+                {userFirstName
+                  ? `Hi ${userFirstName}!`
+                  : "Welcome to VaiMovies!"}
+              </HeaderTitle>
+              <UserProfileButton
+                onPress={() => navigation.navigate("UserProfile")}>
+                {userPhoto ? (
+                  <UserPhoto source={{ uri: userPhoto }} />
+                ) : (
+                  <User />
+                )}
+              </UserProfileButton>
             </HeaderContainer>
             <SearchbarContainer>
               <SearchInput
@@ -256,6 +282,10 @@ const styles = StyleSheet.create({
   toastText: {
     color: Colors.textPrimary,
     fontFamily: "BeVietnamPro-Medium",
+  },
+  modal: {
+    width: round(300),
+    height: round(300),
   },
 });
 
