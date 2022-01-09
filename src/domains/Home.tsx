@@ -6,6 +6,7 @@ import {
   Pressable,
   StatusBar,
   StyleSheet,
+  TextInput,
 } from "react-native";
 import styled from "styled-components/native";
 import Toast from "react-native-easy-toast";
@@ -99,6 +100,7 @@ const Home: React.FC = () => {
 
   const toastRef = useRef<Toast>();
   const modalRef = useRef<Modalize>();
+  const inputRef = useRef<TextInput>();
 
   const { Search, User, Calendar } = Icons;
 
@@ -126,7 +128,12 @@ const Home: React.FC = () => {
       if (data.Response === "True") {
         setMovies(data.Search);
       } else {
-        toastRef.current?.show("No movies found.", 2000);
+        toastRef.current?.show(
+          `No titles found for search${search ? `: ${search}` : ""}${
+            year ? ` in ${year}` : ""
+          }`,
+          2000,
+        );
       }
     } catch (error) {
       toastRef.current?.show("An error ocurred. Try again later", 2000);
@@ -207,6 +214,7 @@ const Home: React.FC = () => {
             </HeaderContainer>
             <SearchbarContainer>
               <SearchInput
+                ref={inputRef}
                 placeholder="Search for a movie or series!"
                 placeholderTextColor={Colors.lightBorder}
                 value={search}
@@ -228,7 +236,11 @@ const Home: React.FC = () => {
                   fill={year ? Colors.yellowStar : Colors.lightBorder}
                 />
               </CalendarBtn>
-              <Pressable onPress={() => fetchMovies()}>
+              <Pressable
+                onPress={() => {
+                  inputRef.current?.blur();
+                  fetchMovies();
+                }}>
                 <Search />
               </Pressable>
             </SearchbarContainer>

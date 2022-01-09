@@ -100,7 +100,7 @@ const UserProfile: React.FC = () => {
 
   const isFocused = useIsFocused();
 
-  const { Star, Google } = Icons;
+  const { Star, Google, User: UserIcon } = Icons;
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loggedUser, setLoggedUser] = useState<User | undefined>(undefined);
@@ -159,8 +159,12 @@ const UserProfile: React.FC = () => {
     if (loggedUser) {
       return (
         <UserSection>
-          <UserPhoto source={{ uri: loggedUser.photo }} />
-          <SectionTitle>{loggedUser.name}</SectionTitle>
+          {loggedUser.photo ? (
+            <UserPhoto source={{ uri: loggedUser.photo }} />
+          ) : (
+            <UserIcon />
+          )}
+          <SectionTitle hasLeftMargin>{loggedUser.name}</SectionTitle>
         </UserSection>
       );
     }

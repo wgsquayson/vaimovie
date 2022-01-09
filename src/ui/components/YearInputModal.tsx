@@ -48,7 +48,10 @@ const YearInputModal: React.ForwardRefRenderFunction<
   const { Check } = Icons;
 
   return (
-    <Modalize modalStyle={styles.modal} ref={ref} snapPoint={570}>
+    <Modalize
+      modalStyle={styles.modal}
+      ref={ref}
+      snapPoint={Platform.OS === "ios" ? 570 : 425}>
       <Container>
         <Label>
           If you'd like, you can add a year to filter the movie or show of your
