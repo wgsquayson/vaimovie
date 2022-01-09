@@ -56,8 +56,7 @@ const SearchbarContainer = styled.View`
   border-color: ${Colors.lightBorder};
   border-radius: ${round(100)}px;
   margin: ${round(30)}px 0;
-  padding: ${Platform.OS === "ios" ? round(16) : round(4)}px
-    ${Platform.OS === "ios" ? 0 : round(16)}px;
+  padding: ${Platform.OS === "ios" ? round(16) : round(4)}px ${round(16)}px;
   flex-direction: row;
   align-items: center;
 `;
@@ -94,7 +93,7 @@ const Home: React.FC = () => {
     useNavigation<NativeStackNavigationProp<DomainsStackParamList, "Home">>();
 
   const toastRef = useRef<Toast>();
-  const { Search, Star, User } = Icons;
+  const { Search, User } = Icons;
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState("");
@@ -155,10 +154,6 @@ const Home: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchMovies("spider");
-  }, []);
-
   const userFirstName = store
     .getState()
     .users.find(user => user.signedIn === true)
@@ -167,6 +162,10 @@ const Home: React.FC = () => {
   const userPhoto = store
     .getState()
     .users.find(user => user.signedIn === true)?.photo;
+
+  useEffect(() => {
+    fetchMovies("spider");
+  }, []);
 
   return (
     <>

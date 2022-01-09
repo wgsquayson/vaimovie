@@ -22,16 +22,22 @@ const HeaderContainer = styled.View`
   flex-direction: column;
 `;
 
-const HeaderTitleContainer = styled.View`
+const SectionTitleContainer = styled.View`
   flex-direction: row;
   align-items: center;
 `;
 
-const HeaderTitle = styled.Text`
+interface SectionTitleProps {
+  hasLeftMargin?: boolean;
+  hasRightMargin?: boolean;
+}
+
+const SectionTitle = styled.Text<SectionTitleProps>`
   font-family: "BeVietnamPro-Bold";
   font-size: ${round(20)}px;
   color: ${Colors.textPrimary};
-  margin: 0 ${round(8)}px;
+  margin-left: ${({ hasLeftMargin }) => (hasLeftMargin ? round(8) : 0)}px;
+  margin-right: ${({ hasRightMargin }) => (hasRightMargin ? round(8) : 0)}px;
 `;
 
 const Detail = styled.Text`
@@ -149,14 +155,18 @@ const UserProfile: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (isFocused) {
-      setMovies(store.getState().favouriteMovies);
-      setLoggedUser(
-        store.getState().users.find(user => user.signedIn === true),
+  const UserSectionComponent: React.FC = () => {
+    if (loggedUser) {
+      return (
+        <UserSection>
+          <UserPhoto source={{ uri: loggedUser.photo }} />
+          <SectionTitle>{loggedUser.name}</SectionTitle>
+        </UserSection>
       );
     }
-  }, [isFocused]);
+
+    return <Detail>You're not signed in yet.</Detail>;
+  };
 
   const GoogleBtn: React.FC = () => {
     if (loggedUser) {
@@ -175,18 +185,14 @@ const UserProfile: React.FC = () => {
     );
   };
 
-  const UserSectionComponent: React.FC = () => {
-    if (loggedUser) {
-      return (
-        <UserSection>
-          <UserPhoto source={{ uri: loggedUser.photo }} />
-          <HeaderTitle>{loggedUser.name}</HeaderTitle>
-        </UserSection>
+  useEffect(() => {
+    if (isFocused) {
+      setMovies(store.getState().favouriteMovies);
+      setLoggedUser(
+        store.getState().users.find(user => user.signedIn === true),
       );
     }
-
-    return <Detail>You're not signed in yet.</Detail>;
-  };
+  }, [isFocused]);
 
   return (
     <>
@@ -203,16 +209,16 @@ const UserProfile: React.FC = () => {
         keyboardDismissMode="none"
         ListHeaderComponent={
           <HeaderContainer>
-            <HeaderTitleContainer>
+            <SectionTitleContainer>
               <BackButton />
-              <HeaderTitle>Your profile</HeaderTitle>
-            </HeaderTitleContainer>
+              <SectionTitle hasLeftMargin>Your profile</SectionTitle>
+            </SectionTitleContainer>
             <UserSectionComponent />
             <GoogleBtn />
-            <HeaderTitleContainer>
-              <HeaderTitle>Your favourites</HeaderTitle>
+            <SectionTitleContainer>
+              <SectionTitle hasRightMargin>Your favourites</SectionTitle>
               <Star />
-            </HeaderTitleContainer>
+            </SectionTitleContainer>
             {movies.length > 0 && (
               <Detail>
                 Only the best! Tap on a title to see more details.
