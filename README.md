@@ -35,9 +35,9 @@ The design for this app was inspired by: https://dribbble.com/shots/15130805-Cin
 ### Home screen (signed out/signed in/year filter (on pressing the calendar icon))
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/43099794/148667770-6bd3aa82-4bac-452c-9529-b49221d598cd.png" height="500">
-  <img src="https://user-images.githubusercontent.com/43099794/148667842-0cafc2b8-87eb-4f28-88b6-71e966714a96.png" height="500">
-  <img src="https://user-images.githubusercontent.com/43099794/148668010-ac68940c-018c-42bc-85d7-fe260f123cb6.png" height="500">
+  <img src="https://user-images.githubusercontent.com/43099794/148671617-5a0b9986-bce2-4efb-ad29-12ba2699f201.png" height="500">
+  <img src="https://user-images.githubusercontent.com/43099794/148671607-04337eda-a39a-4b54-b4e8-ef62df59d46c.png" height="500">
+  <img src="https://user-images.githubusercontent.com/43099794/148671629-a4794e6b-958c-471f-8621-4ed39444414b.png" height="500">
 </p>
 
 ### Movie/Show details screen (not favourite/favourite)
